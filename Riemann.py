@@ -75,19 +75,13 @@ def Jacobbi(v, u):
             result[m][i]=expand(diff(v[m],u[i]))
     return Matrix(result)
 
+
 def metric_transform(g, v, u):
     J=Jacobbi(v, u)
     N=len(v)
-    if not N==len(u):
-        raise Exception()
-    result=[[0 for i in range(N)] for j in range(N)]
+    result=J.transpose()*g*J
     for m in range(N):
         for n in range(N):
-            a=0
-            for i in range(N):
-                for j in range(N):
-                    a+=(J[m,i]*J[n,j]+J[m,j]*J[n,i])*g[i,j]
-            a=expand(a/2)
-            result[m][n]=a
-    return Matrix(result)
+            result[m, n]=result[m, n].simplify()
+    return result
 
